@@ -8,5 +8,10 @@
 <body>
     <h2>Welcome {{user.first_name}} {{user.last_name}}!</h2>
     <a href="/logout">Logout</a>
+    <form action="create_post" method="POST">
+        {% csrf_token %}
+        <textarea name="text"></textarea>
+        <input type="submit" value="Post">
+    </form>
 </body>
 </html>

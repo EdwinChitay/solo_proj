@@ -18,7 +18,7 @@ def register(request):
         new_user = User.objects.create(first_name=request.POST['first_name'], last_name=request.POST['last_name'],
         email=request.POST['email'], password=hashed_pw)
         request.session['user_id'] = new_user.id
-        return redirect('/groups')
+        return redirect('/home')
     return redirect('/') 
 
 def login(request):
@@ -27,7 +27,7 @@ def login(request):
         logged_user = logged_user[0]
         if bcrypt.checkpw(request.POST['password'].encode(), logged_user.password.encode()):
             request.session['user_id'] = logged_user.id
-            return redirect('/groups')
+            return redirect('/home')
     messages.error(request, "Email and/or password are incorrect")
     return redirect('/')
 
@@ -46,4 +46,21 @@ def home(request):
         'user': User.objects.get(id=request.session['user_id']),
     }
     return render(request, 'home.html', context)
+
+def create(request):
+    if 'user_id' not in request.session:
+        messages.error(request, "You need to register or log in!")
+        return redirect('/')
+    if request.method == "POST":
+        errors = Post.objects.create_validator(request.POST)
+        if len(errors) > 0:
+            for key, value in errors.items():
+                messages.error(request, value)
+            return redirect('/home')
+        else:
+            Post.objects.create(
+            text = request.POST['text'],
+            user = User.objects.get(id=request.session['user_id']),
+            )
+    return redirect('/home')
 
