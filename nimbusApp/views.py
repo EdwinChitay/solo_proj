@@ -30,3 +30,20 @@ def login(request):
             return redirect('/groups')
     messages.error(request, "Email and/or password are incorrect")
     return redirect('/')
+
+def logout(request):
+    if 'user_id' not in request.session:
+        messages.error(request, "You need to register or log in!")
+        return redirect('/')
+    request.session.clear()
+    return redirect('/')
+
+def home(request):
+    if 'user_id' not in request.session:
+        messages.error(request, "You need to register or log in!")
+        return redirect('/')
+    context = {
+        'user': User.objects.get(id=request.session['user_id']),
+    }
+    return render(request, 'home.html', context)
+
