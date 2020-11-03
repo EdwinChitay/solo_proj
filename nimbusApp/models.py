@@ -37,4 +37,5 @@ class Post(models.Model):
     user =  models.ForeignKey(User, related_name="post_user", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    user_likes = models.ManyToManyField(User, related_name='liked_posts')
     objects = PostManager()

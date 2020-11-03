@@ -65,6 +65,15 @@ def create(request):
             )
     return redirect('/home')
 
+def delete(request, post_id):
+    if 'user_id' not in request.session:
+        messages.error(request, "You need to register or log in!")
+        return redirect('/')
+    if request.method == "POST":
+        post_to_delete = Post.objects.get(id=post_id)
+        post_to_delete.delete()
+    return redirect('/home')
+
 def profile(request, user_id):
     if 'user_id' not in request.session:
         messages.error(request, "You need to register or log in!")

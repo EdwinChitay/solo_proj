@@ -9,5 +9,11 @@
     <a href="/home">Home</a>
     <a href="/logout">Logout</a>
     <p>{{post.text}}</p>
+    {% if user in  %}
+    <form action="delete_post/{{post.id}}" method="POST">
+        {% csrf_token %}
+        <button>Delete</button>
+    </form>
+    {% endif %}
 </body>
 </html>

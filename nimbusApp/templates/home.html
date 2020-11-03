@@ -25,6 +25,12 @@
     {% for post in all_posts %}
     <p><a href="/user_profile/{{post.user.id}}">{{post.user.first_name}}:</a></p>
     <p> <a href="/user_post/{{post.id}}">{{post.text}}</a></p>
+        {% if post.user == user %}
+        <form action="delete_post/{{post.id}}" method="POST">
+            {% csrf_token %}
+            <button>Delete</button>
+        </form>
+        {% endif %}
     {% endfor %}
 </body>
 
