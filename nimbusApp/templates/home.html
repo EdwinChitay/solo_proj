@@ -1,17 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
 </head>
+
 <body>
     <h2>Welcome {{user.first_name}} {{user.last_name}}!</h2>
     <a href="/logout">Logout</a>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     <form action="create_post" method="POST">
         {% csrf_token %}
         <textarea name="text"></textarea>
         <input type="submit" value="Post">
     </form>
+    {% for post in all_posts %}
+    <p><a href="/user_profile/{{post.user.id}}">{{post.user.first_name}}:</a></p>
+    <p> <a href="/user_post/{{post.id}}">{{post.text}}</a></p>
+    {% endfor %}
 </body>
+
 </html>

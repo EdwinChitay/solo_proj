@@ -25,8 +25,16 @@ class User(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     objects = UserManager()
 
+class PostManager(models.Manager):
+    def create_validator(self, reqPOST):
+        errors = {}
+        if len(reqPOST['text']) <5:
+            errors['text'] = "Post must be at least 5 characters long."
+        return errors
+
 class Post(models.Model):
     text = models.CharField(max_length=250)
     user =  models.ForeignKey(User, related_name="post_user", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    objects = PostManager()

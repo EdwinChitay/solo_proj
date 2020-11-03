@@ -44,6 +44,7 @@ def home(request):
         return redirect('/')
     context = {
         'user': User.objects.get(id=request.session['user_id']),
+        'all_posts': Post.objects.all(),
     }
     return render(request, 'home.html', context)
 
@@ -63,4 +64,23 @@ def create(request):
             user = User.objects.get(id=request.session['user_id']),
             )
     return redirect('/home')
+
+def profile(request, user_id):
+    if 'user_id' not in request.session:
+        messages.error(request, "You need to register or log in!")
+        return redirect('/')
+    context = {
+        'user': User.objects.get(id=user_id),
+    }
+    return render(request, 'profile.html', context)
+
+def post(request, post_id):
+    if 'user_id' not in request.session:
+        messages.error(request, "You need to register or log in!")
+        return redirect('/')
+    one_post = Post.objects.get(id=post_id)    
+    context = {
+        'post': one_post,
+    }
+    return render(request, 'post.html', context)
 
