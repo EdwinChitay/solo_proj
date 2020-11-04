@@ -74,6 +74,32 @@ def delete(request, post_id):
         post_to_delete.delete()
     return redirect('/home')
 
+def like(request, post_id):
+    if 'user_id' not in request.session:
+        messages.error(request, "You need to register or log in!")
+        return redirect('/')
+    if request.method == "POST":
+        liked_post = Post.objects.get(id=post_id)
+        user_liking = User.objects.get(id=request.session['user_id'])
+        liked_post.user_likes.add(user_liking)
+        return redirect('/home')
+
+def add_comment(request, post_id):
+    if 'user_id' not in request.session:
+        messages.error(request, "You need to register or log in!")
+        return redirect('/')
+    if request.method == "POST":
+        errors = Comment.objects.create_validator(request.POST)
+        if len(errors) > 0:
+            for key, value in errors.items():
+                messages.error(request, value)
+            return redirect('/home')
+        else:
+            user = User.objects.get(id=request.session['user_id'])
+            post = Post.objects.get(id=post_id)
+            Comment.objects.create(comment=request.POST['comment'], user=user, post=post)
+        return redirect('/home')
+
 def profile(request, user_id):
     if 'user_id' not in request.session:
         messages.error(request, "You need to register or log in!")

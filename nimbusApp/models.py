@@ -39,3 +39,18 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     user_likes = models.ManyToManyField(User, related_name='liked_posts')
     objects = PostManager()
+
+class CommentManager(models.Manager):
+    def create_validator(self, reqPOST):
+        errors = {}
+        if len(reqPOST['comment']) == 0:
+            errors['comment'] = "Comment can not be blank."
+        return errors
+
+class Comment(models.Model):
+    comment = models.CharField(max_length=250)
+    user = models.ForeignKey(User, related_name='user_comments', on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='post_comments', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects =  CommentManager()

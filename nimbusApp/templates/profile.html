@@ -6,11 +6,17 @@
     <title>User Profile</title>
 </head>
 <body>
-    <h2>{{user.first_name}} {{user.last_name}}</h2>
+    <h3>Name: {{user.first_name}} {{user.last_name}}</h3>
+    <h3>Email: {{ user.email }}</h3>
     <a href="/home">Home</a>
     <a href="/logout">Logout</a>
     {% for post in user.post_user.all %}
     <p>{{post.text}}</p>
+    <form action="/like/{{post.id}}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="like">
+    </form>
+    {{ post.user_likes.count }}
     {% endfor %}
 </body>
 </html>
